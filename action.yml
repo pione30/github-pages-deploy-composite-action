@@ -1,0 +1,17 @@
+name: 'Deploy to GitHub Pages'
+author: 'pione30 <g.pionelish30@gmail.com>'
+description: 'This composite action will deploy specified directory to GitHub Pages.'
+inputs:
+  branch:
+    description: 'A branch used as the publishing source of GitHub Pages.'
+    required: false
+    default: 'gh-pages'
+  folder:
+    description: 'A folder used as the publishing source of GitHub Pages.'
+    required: false
+    default: ''
+runs:
+  using: "composite"
+  steps:
+    - run: git --version
+      shell: bash
