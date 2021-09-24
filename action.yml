@@ -8,10 +8,37 @@ inputs:
     default: 'gh-pages'
   folder:
     description: 'A folder used as the publishing source of GitHub Pages.'
-    required: false
-    default: ''
+    required: true
 runs:
   using: "composite"
   steps:
-    - run: git --version
+    - name: Configure Git
+      run: |
+        git remote set-url origin $(echo $GITHUB_SERVER_URL/${{ github.repository }}.git | sed -e 's|://|://${{ github.token }}@|')
+        git config --local user.email actions@github.com
+        git config --local user.name 'GitHub Actions'
+        git config --local remote.origin.fetch refs/heads/${{ inputs.branch }}:refs/remotes/origin/${{ inputs.branch }}
+        git config --local branch.${{ inputs.branch }}.remote origin
+        git config --local branch.${{ inputs.branch }}.merge refs/heads/${{ inputs.branch }}
+      shell: bash
+    - name: Copy the folder to a temporary working folder
+      run: cp -r ${{ inputs.folder }} /tmp/${{ github.sha }}
+      shell: bash
+    - name: Switch to the branch
+      run: |
+        git pull --allow-unrelated-histories origin ${{ inputs.branch }} && git switch ${{ inputs.branch }} \
+        || git switch --orphan ${{ inputs.branch }}
+      shell: bash
+    - name: Add the updated folder
+      run: |
+        mkdir -p ${{ inputs.folder }}
+        rm -rf ${{ inputs.folder }}/*
+        mv /tmp/${{ github.sha }}/* ${{ inputs.folder }}
+        git add ${{ inputs.folder }}
+      shell: bash
+    - name: Commit & Push if there are any changes
+      run: |
+        git diff --cached --quiet \
+        || git commit -m 'Deploy to GitHub Pages' \
+        && git push origin ${{ inputs.branch }}
       shell: bash
