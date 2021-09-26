@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  - push
+
+jobs:
+  deploy-test:
+    runs-on: ubuntu-latest
+    env:
+      branch: deploy-test-${{ github.run_id }}
+      folder: deploy-test-${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@v2
+      - run: mkdir ${{ env.folder }} && echo hello > ${{ env.folder }}/hello
+      - name: Test current action
+        uses: ./
+        with:
+          branch: ${{ env.branch }}
+          folder: ${{ env.folder }}
+      - name: Clean-up
+        run: |
+          git push origin :${{ env.branch }}
