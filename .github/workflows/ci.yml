@@ -7,8 +7,8 @@ jobs:
   deploy-test:
     runs-on: ubuntu-latest
     env:
-      branch: deploy-test-${{ github.run_number }}
-      folder: deploy-test-${{ github.run_number }}
+      branch: deploy-test-${{ github.run_id }}
+      folder: deploy-test-${{ github.run_id }}
     steps:
       - uses: actions/checkout@v2
       - run: mkdir ${{ env.folder }} && echo hello > ${{ env.folder }}/hello
