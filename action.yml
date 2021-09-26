@@ -24,6 +24,9 @@ runs:
     - name: Copy the folder to a temporary working folder
       run: cp -r ${{ inputs.folder }} /tmp/${{ github.sha }}
       shell: bash
+    - name: Checkout the folder to HEAD
+      run: git checkout HEAD -- ${{ inputs.folder }}
+      shell: bash
     - name: Switch to the branch
       run: |
         git pull --allow-unrelated-histories origin ${{ inputs.branch }} && git switch ${{ inputs.branch }} \
