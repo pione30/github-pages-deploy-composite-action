@@ -1,0 +1,16 @@
+name: CI
+
+on:
+  - push
+
+jobs:
+  deploy-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: mkdir deploy-test-${{ github.run_number }} && echo hello > deploy-test-${{ github.run_number }}/hello
+      - name: Test current action
+        uses: ./
+        with:
+          branch: deploy-test-${{ github.run_number }}
+          folder: deploy-test-${{ github.run_number }}
