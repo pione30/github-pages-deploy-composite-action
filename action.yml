@@ -26,6 +26,8 @@ runs:
       shell: bash
     - name: Checkout the folder to HEAD
       run: git checkout HEAD -- ${{ inputs.folder }}
+      # Continue in case of untracked inputs.folder
+      continue-on-error: true
       shell: bash
     - name: Switch to the branch
       run: |
