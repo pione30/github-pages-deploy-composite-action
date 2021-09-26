@@ -25,9 +25,7 @@ runs:
       run: cp -r ${{ inputs.folder }} /tmp/${{ github.sha }}
       shell: bash
     - name: Checkout the folder to HEAD
-      run: git checkout HEAD -- ${{ inputs.folder }}
-      # Continue in case of untracked inputs.folder
-      continue-on-error: true
+      run: test -z $(git ls-files ${{ inputs.folder }}) || git checkout HEAD -- ${{ inputs.folder }}
       shell: bash
     - name: Switch to the branch
       run: |
