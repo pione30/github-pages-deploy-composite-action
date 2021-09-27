@@ -4,14 +4,38 @@ on:
   - push
 
 jobs:
-  deploy-test:
+  test-build-untracked-file-on-ci:
     runs-on: ubuntu-latest
     env:
-      branch: deploy-test-${{ github.run_id }}
-      folder: deploy-test-${{ github.run_id }}
+      branch: ${{ github.job }}-${{ github.run_id }}
+      folder: ${{ github.job }}-${{ github.run_id }}
     steps:
       - uses: actions/checkout@v2
       - run: mkdir ${{ env.folder }} && echo hello > ${{ env.folder }}/hello
+      - name: Test current action
+        uses: ./
+        with:
+          branch: ${{ env.branch }}
+          folder: ${{ env.folder }}
+      - name: Clean-up
+        run: |
+          git push origin :${{ env.branch }}
+
+  test-build-untracked-file-but-tracked-on-gh-pages:
+    runs-on: ubuntu-latest
+    env:
+      branch: ${{ github.job }}-${{ github.run_id }}
+      folder: ${{ github.job }}-${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@v2
+      - run: mkdir ${{ env.folder }} && echo hello > ${{ env.folder }}/hello
+      - name: Create branch
+        uses: ./
+        with:
+          branch: ${{ env.branch }}
+          folder: ${{ env.folder }}
+      - uses: actions/checkout@v2
+      - run: mkdir ${{ env.folder }} && echo HELLO > ${{ env.folder }}/hello
       - name: Test current action
         uses: ./
         with:
