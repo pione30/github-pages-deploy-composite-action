@@ -39,6 +39,7 @@ runs:
         mkdir -p ${{ inputs.folder }}
         rm -rf ${{ inputs.folder }}/*
         mv /tmp/${{ github.sha }}/* ${{ inputs.folder }}
+        rm -rf /tmp/${{ github.sha }}
         git add ${{ inputs.folder }}
       shell: bash
     - name: Commit & Push if there are any changes
