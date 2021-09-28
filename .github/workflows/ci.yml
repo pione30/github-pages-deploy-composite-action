@@ -12,11 +12,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: mkdir ${{ env.folder }} && echo hello > ${{ env.folder }}/hello
-      - name: Test current action
+      - name: Use action
         uses: ./
         with:
           branch: ${{ env.branch }}
           folder: ${{ env.folder }}
+      - name: Test
+        run: [[ $(cat ${{ env.folder }}/hello) = hello ]]
+        shell: bash
       - name: Clean-up
         run: |
           git push origin :${{ env.branch }}
@@ -36,11 +39,14 @@ jobs:
           folder: ${{ env.folder }}
       - uses: actions/checkout@v2
       - run: mkdir ${{ env.folder }} && echo HELLO > ${{ env.folder }}/hello
-      - name: Test current action
+      - name: Use action
         uses: ./
         with:
           branch: ${{ env.branch }}
           folder: ${{ env.folder }}
+      - name: Test
+        run: [[ $(cat ${{ env.folder }}/hello) = HELLO ]]
+        shell: bash
       - name: Clean-up
         run: |
           git push origin :${{ env.branch }}
