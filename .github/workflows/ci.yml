@@ -18,7 +18,7 @@ jobs:
           branch: ${{ env.branch }}
           folder: ${{ env.folder }}
       - name: Test
-        run: [[ $(cat ${{ env.folder }}/hello) = hello ]]
+        run: ([[ $(cat ${{ env.folder }}/hello) = hello ]])
         shell: bash
       - name: Clean-up
         run: |
@@ -45,7 +45,7 @@ jobs:
           branch: ${{ env.branch }}
           folder: ${{ env.folder }}
       - name: Test
-        run: [[ $(cat ${{ env.folder }}/hello) = HELLO ]]
+        run: ([[ $(cat ${{ env.folder }}/hello) = HELLO ]])
         shell: bash
       - name: Clean-up
         run: |
