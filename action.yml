@@ -24,8 +24,10 @@ runs:
     - name: Copy the folder to a temporary working folder
       run: cp -r ${{ inputs.folder }} /tmp/${{ github.sha }}
       shell: bash
-    - name: Checkout the folder to HEAD
-      run: test -z $(git ls-files ${{ inputs.folder }}) || git checkout HEAD -- ${{ inputs.folder }}
+    - name: Remove the folder if untracked, otherwise checkout the folder to HEAD
+      run: |
+        [[ -z $(git ls-files ${{ inputs.folder }}) ]] && rm -rf ${{ inputs.folder }} \
+        || git checkout HEAD -- ${{ inputs.folder }}
       shell: bash
     - name: Switch to the branch
       run: |
@@ -37,6 +39,7 @@ runs:
         mkdir -p ${{ inputs.folder }}
         rm -rf ${{ inputs.folder }}/*
         mv /tmp/${{ github.sha }}/* ${{ inputs.folder }}
+        rm -rf /tmp/${{ github.sha }}
         git add ${{ inputs.folder }}
       shell: bash
     - name: Commit & Push if there are any changes
