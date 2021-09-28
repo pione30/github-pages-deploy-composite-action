@@ -21,6 +21,7 @@ jobs:
         run: ([[ $(cat ${{ env.folder }}/hello) = hello ]])
         shell: bash
       - name: Clean-up
+        if: ${{ always() }}
         run: |
           git push origin :${{ env.branch }}
 
@@ -48,5 +49,6 @@ jobs:
         run: ([[ $(cat ${{ env.folder }}/hello) = HELLO ]])
         shell: bash
       - name: Clean-up
+        if: ${{ always() }}
         run: |
           git push origin :${{ env.branch }}
